@@ -1,0 +1,309 @@
+NodeJS is a javascript Runtime
+
+ if we want to run some things that aren't part of V8 engine or javascript. NodeJs in a simplified form is a way for us to give  a javascript file to NodeJs runtime. When V8 engine finds something that itn't part of Javascript thats where libuv comes in
+
+libuv: It is a multi-platform c library that provides support for asybchronous I/O based on event loops. In somple words it's a library that allows us to do some neat features with NodeJs that make it powerful. So NodeJs is made up of V8 and libuv
+To run Javascript we need a javascript engine and a runtime to be able to run the code and  that's what node does.
+
+Code can be executed in powershell by typing node and executing code
+The process object is a global that provides information about, and control over , the current Node.Js process.
+The process.argv property returns an array containing command-line arguments passed when the Node.Js process was launched. The first element will be process.execpath. The second element will be the javascript file being executed. The remaining elements will be any additional command-lne arguments.
+
+Node doesn't have window as we have in browser.
+  It has a similar object called global. Global as all of the  functionality that we can use directly.
+Browser contains: window, document, history, location, navigator
+nodeJs contains: global, process, module, __filename(__ = directory name), require()
+
+The URL class in node make our life easier when going from front end to back end code.
+Node is used to create servers to build web and mobile applications that connect data bases and provide user data
+
+Backend Vs Frontend
+Client: Frontend (Browser)
+server : what hapens behind the screen(buisness logic)
+
+When we search www.google.com, we are making a request and asking the server to return whatever data is available for the entered url
+The server responses with html file: to load the web page, js files: to have actions in the web page, css files :to style the visual of the web page
+
+The language  that server uses to talk to clients and the clients uses to send data to the servers is called  HTTP
+HTTP: Hyper text transfer protocal
+HTTPS: Hyper text transfer protocal (secure version), Everything is encrypted .In case someone tries to come between browser and the server to snoop on what we're seeing. Spy on us and steal the data
+
+When the server sends the data. instead of sharing it in files it can use formats like json/xml/
+That what the backend is for. It serves the data that we need on the front end (on the client side) to show something useful to the  user.
+When we write code to serve pur data to the front end, we call our code backend code.
+
+Why we do not keep all the data at FE?
+Things like input validations, user verifications should be done in be only. On the server side we do things that we can't or shouldn't do on the FE(browser). Things like security, logging users in, and input validation where the client can send us data that we don't expect
+The idea of client server architecture is used by most web application
+FE can be written in HTML, JS and CSS only
+BE can be written in any language
+
+What does Nodejs do?
+Node does the things that are our browser cant, Like processing env variables, reading files
+
+Inside NodeJs runtime: V8 + NodeJs Apis(fs: access to file system, http: make http request, path: look up path on our computer that we might want to read and write, crypto: encrypting data)These are written in c and c++, + NodeJs bindings(These bindings are what lets our Javascript cpode call functionality that's implemented in c and c++
+http lives inside libuv
+V8 and libuv are the most important internal components of Nodejs
+NodeJs is open source project on Github. We can find all of the global functions in the src folder. 
+In src, anything that starts with uv_ references to libuv.
+
+libuv Internals Deep dive:
+Node is libuv with a very well known client language i.e. Javascript.Libuv has bindings to other languages as well. So libuv code stays in a different place or repositories
+libuv has functions that are written in low level langi=uages lonke c , which helps while reading any file from our system ,We don't have to learn c as node js runtime takes care of that
+
+Asynchronous Vs Synchronous:
+Synchronous code runs line by line, synchronously
+Asynchronous code doesn't run line by line necessarly
+
+Callback functions:
+A callback is a function passed as an argument to another function This technique allows a function to call another function A callback function can run after another function has finished Function Sequence JavaScript functions are executed in the sequence they are called. Not in the sequence they are defined.
+
+setTimeout(() =>console.log('Rabbit finishes!'),1000)
+console.log('turtle finishes!');
+
+Here 2nd line will be executed first and after that first line be called back and executed
+
+Non blocking Function:
+While our cpu is executing some code, if any request comes that takes a long time to response. We have to make sure that other codes are running 
+Javascript is a synchronous language. One line executes after another. How ever we've seen we can write asynchronous code where we are able to execute a call back function
+When Javascript is run in certain envs like a browser or Node.Js it allows us to write asnchronous functionality
+settimeout is not a part of javascript. It is a part of nodeJs apis
+So javascript can behave asyncronously but it doesn't come out of the box. We have  to manupulate it to be this way.
+
+Multithreading, Processes and Threads:
+Threads execute side by side, allowing us to execute code asynchronously by putting it on a new thread.
+
+Dead lock: Where two threads are stuck waiting for an action that can never actually occur
+Javascript is a single  threaded language. Javascript simplifies things by allowing one thread to execute your code at a time
+
+How does node do it?
+The event loop is code in libuv that runs asynchronous functions and execcutes the correponding call back when the result of the function is ready. event loop is  responsible for handling all those callback functions in your node programs. 
+libuv has an event loop and Thread pool. The thread pool contains a main thread where Javascript code is executed and the nodeJs apis are executed in these thereads. Once any of the thread has executed any task it will send the result to event loop and our program runs smoothly. once any thread is free it can be reused for other tasks.
+libuv always tries to avoid these threads as they are more complex. Sometimes some network calls are made by our OS kernel.
+As a developer we don't have to wory about these threads as libuv knows what to use when it is needed.( kernel or threads)
+
+Callback Queues:
+Call backs are added from bottom and removed from top. First in First out
+
+Event Loop:
+There are stages of  event loops:
+Timers
+I/O callbacks
+setImmedite
+Close callbacks
+Each of these phases has their own queue of callbacks that are executed during that phase.
+There are three types of Timers in nodeJs.
+SetTimeout: It will delay the execution of the code
+setinterVal: It is same as setTimeOut except it sets a function executed repeatedly (function calls separated by a minimum of the delay that we pass as a parameter)
+setimmediate: It sets the callback that we pass in to be executed as soon as possible on the events loop. On a highlevel it will be executed immediately
+
+When the event  loop starts it takes Timers(setTimeout/setInterval) then I/O callbacks (90 % of the code), then comes setImmediate(not that immediate as mention abbove, it gets pickeed up by event loop after time and I/O call back. The event loop picks Close Callbacks, It will check for callbacks in Timers, I/O callbacks, setImmediate and  execute the  callbacks if any.
+
+Thats how nodeJs creates a server by combining event loops and  libuv
+
+The observer pattern:
+Observer patterns are proven approaches to solving problems that appear again and again in all kinds of different programs and applications
+
+A simple get request in NodeJs
+const { get } = require('https')
+//now the request function doesn't need to be pre fixed by the http.
+ get ('https://www.google.com', (res) =>{
+    res.on('data', (chunk) =>{
+        console.log(`data chunk: ${chunk}`)
+    })
+    res.on('end' , () =>{
+        console.log('No More data to log')
+    })
+})
+
+
+Why do we use modules:
+1.Reuse existing code (Module allows us  to package existing code into these reusable chunks.
+2.Organize our code (Modules help us in organizing our code)
+3.Expose only what will be used: Modules expose only the functionality that will be used by other modules and hide details that only matter inside the modules
+
+Using Index.js
+When we want to import modules from files that are present out side of the current directory we can use our index.js file
+index.js treats a folder like a module. So when we pass the path to a folder to the required function. It resolves to the index.js file inside of that folder
+Index.js is a special case, it allows you tp export functions from many different modules that live in a single folder from a single point. Which can than be referenced using the name of that folder or the path to that folder
+This way , when we import our files , we don't need to target the individual modules in your directory
+
+Now, we could be realy fancy here and say we wanted to export the functions directly from index.js
+
+To be more specific we might not need index.js at all. The thing we learned is we can use this feature to import groups of modules that are grouped in a folder with an index.js file that tells us what is being exported from that folder
+
+Difference between Module and package:
+A module is a file that contains some code which may be exported from that module
+A package is a collection of modules that have been packaged together.It ,means a reusable package that's been shared on NPM registry.
+
+Installing a package:
+Whenever we install a package running the npm install command it downloads the package and keeps inside the node modules folder. 
+It updates the dependencies section inpackage.json fiel
+it also keeps a track of the library of the package in package-lock.json file
+
+We have many api ackages in npmjs. Axios is one of them.
+Once we make a get api call it returns a promise . we can chain our promises with it.
+With an api call we can use .then to get the response or use .catch to handle any error if there is or .then to execute a piece of code when every thing is executed
+
+Node Modules folder:
+Whenever we download any package, node also download dependencies of those package, in case of axios package it is follow-redirects package. This can also be found in the dependencies block package.json file of axios folder.
+The dependencies folder maintain the flat file structure(out side of dependenciy folder) as some other package may have dependency on the folder hence to be able to re use and memory management 
+
+Package-lock.json:
+if a verson is ^1.0.0, it will support, 1.2 - 19, here 1 is major and 0 is minor
+in case of ^0.9.0, it will support 0.9.1, 0.9.2 and so on, here it is treating .9 as major
+if we use the ~ character, ~4.16.0, it will support all patched versions of 4.16
+
+What is a web server?
+When we log on www.facebook.com , DNS(domain name system) finds the ip iddress of the url and we make requests to that url through http servers
+
+in Console by executing this, we can add a user into the DB. If we restart the server all of the posted data will be deleted
+fetch('http://localhost:3000/friends',{ method: 'POST', body: JSON.stringify({id:3, name:'Ryan Dahl'}) });
+
+To return the data received in request, we need to use the pipe function to read the data and convert in to eritable stream
+code:
+fetch('http://localhost:3000/friends',{ method: 'POST', body: JSON.stringify({id:3, name:'Ryan Dahl'}) }) .then((response) => response.json()).then((friend) => console.log(friend));
+
+EXPRESS Project:
+To use express first we have to import it. Then we have to initilize it by assigning it to a variable app
+we can create a PORT and listen to it by using app.listen(PORT)
+
+by using app.get/post we can create get or post apis that can fetch or post data to our server,
+the routes take a path name, then req and res are streams that can be passed as a parameter in the call back function
+
+to get a data from the url we use :friendId, so that it can be used in fetching the data related to the id. 
+friendId can be get by req.params.friendId and it needs to be converted to number as the url is itself is string
+
+we can add if/else conditions in it when the passed id in the url is not present in our db
+
+while responding to the client we set the data type by res.json(data)
+
+to set the status res.status(200)
+
+When we install any package as dev dependency, it won't be executed when we deploy some thing into the production, If we add some package as dev dependency it won't make the 
+node modules heavier. It helps in keeping our application nice and simple
+
+nodemon prevents us on starting our server again and again when we make some change in the files.
+added sript:
+"watch": "nodemon server.js"
+Packages thar are in devDependencies block are only required during developement and not while running 
+
+Middleware:
+It lives in between request coming in and response going out from our application . Appart from the req and res it takes a third parameter next
+It can perfom action on the request before coming to express, Through next express allows us to call middleware
+app.use(function(rq, res, next){
+})
+
+MVC (Model-View-Controller) is a widely used software design pattern that helps organize code in a structured manner. Let’s delve into its components and how they work together:
+
+1. Model: The model represents the data and business logic of an application. It interacts with the database, processes data, and performs any necessary calculations. Essentially, it encapsulates everything related to data management.
+2. View: The view handles the user interface (UI) logic. It generates what the user sees and interacts with. Views are created based on data from the model, but they don’t directly access the model. Instead, they communicate with the controller.
+3. Controller: The controller acts as the intermediary between the model and view. It processes incoming requests, manipulates data using the model, and interacts with the view to render the final output. The controller doesn’t handle data logic; it simply instructs the model on what to do.
+
+Routes:
+Remember, routes are the pathways that guide requests through your application, ensuring that users get the right content based on their interactions. 🚀🌐
+Routes, controllers, and views work together to create a robust web application.
+Routes allows us to do some custiom actions for our desired apis
+
+Whether you’re dealing with file system operations, URL manipulation, or general path management, the path module is an invaluable tool for Node.js developers
+The path module in Node.js is a powerful utility that simplifies file path handling. It ensures consistency, reliability, and cross-platform compatibility when working with directories and file paths. 
+
+Whitelisting is the practice of explicitly allowing access to a particular privilage or service. it is the opposite of black listing
+As a secutiry feature browsers block cross origin requests, e.g: where FE and BE is running on different ports. So that we don't leak the data unintentionally.
+We can allow cross origin requests that we expect by sending Access-Control-Allow-Origin header from BE(server)
+If we mention any specific origin , reqests from that origin is allowed or if we pass astresick(*) reqests from all origins is allowed.
+"install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix",
+    "install": "npm run install-server && npm run install-client",
+    "server": "npm run watch --prefix server",
+    "client": "npm start --prefix client",
+    "watch": "npm run server & npm run client",
+npm config set script-shell bash: Or if you have the bash shell installed on your machine (for example, through Git for Windows), set the default shell used by NPM to the bash shell by typing: npm config set script-shell bash in your terminal and to undo it npm config delete script-shell. All commands in your package.json will now run in a bash shell.
+React has a command in the package.json to create a build ready for production. after running it it will create a public folder with the needed files in it in the client folder. We have modified that command to create that public folder in server folder. 
+After the public file is generated in server folder we have added another middle ware 
+app.use(express.static(path.join(__dirname,'..','public'))); A built-in middleware function is provided by Express called express. static that allows you to serve static files from a directory. This middleware function takes one argument, which is the name of the directory where your static files are stored 
+
+From express we are serving the public foler, so that FE build is running when we run npm run server command. With this we have a challenge.
+Our FE app has only routing / and /launch routes to the lauch page. where as the index.html is not one of those routes. by doing this 
+app.get('/', (req, res) =>{
+    res.sendFile(path.join(__dirname,'..', 'public', 'index.html'));
+})
+we are telling express whenever we get a / request send the index.html file in response
+We have created this one command for building FE and BE
+"deploy": "npm run build --prefix client && npm start --prefix server":
+npm run build --prefix client: this will create the pruduction build file in the server folder(copying public file in server) command in client jsonPackage:  "build": "BUILD_PATH=../server/public react-scripts build"
+
+npm start --prefix server: after client send the build to server, and node will start executing this server.js file. Whhich requires app.js. and in app.js will serve the index.html file
+
+by doing this both our FE and BE uses same port .
+
+morgan is a package which is a logger for logging request data coming to the server.
+
+Load balancing is the process of distributing a set of tasks over a set of resources, with the aim of making of their overall processing more efficient
+
+Difference between 
+MongoDB and POSTGRES
+Shema: A schema defines the structure of the data that we store in database
+
+MongoDB:
+TUPE: DocumentDB: A document database (also known as a document-oriented database or a document store) is a database that stores information in documents. 
+ORGANIZED INTO:Collections: Data is stored in collections in JSON format, in key value pairs
+QUERY LANGUAGE: NOSQL: 
+SCALING: HORIZONTAL : when there is more load, load will be shared between processors
+SCHEMA: Flexible : Data coming in any schema format can be stored
+
+POSTGRES:
+TUPE: RELATIONAL: A relational database is a type of database that stores and provides access to data points that are related to one another 
+ORGANIZED INTO:Collections: Data is stored in tables
+QUERY LANGUAGE: SQL: 
+SCALING: VERTICAL : When there is more load, more no of processors will be required
+SCHEMA: RIGID : Knows the schema of the data before it comes
+
+Though Mongodb doesnt have any schema while reading and wrting data into the db, we can enforce schemas through API
+
+BSON: Binary JSON
+
+Reasons to connect to a data bases:
+1.Data needs to persist between restarts
+2.API needs to be stateless for cluster mode: When we run many instances of our server in a cluster, our node code should be state less, When we handle a request coming in, It should only rely on the data thats being sent in the request, anything else needs to come from a db or any external service.
+
+Object-relational impedance mismatch:
+We have to map the way data is stored in a relational db like SQL, to the way objects stored in our code, 
+No sequel db is on the other hand, sometimes allow us to completely avoid this issue by storing our data in a way that matches the way it's stored in our code
+
+Reasons for chosing 
+MongoDB:
+Best for unstructured data or wgere the structure will change often
+SQL:
+Structure of data is known and well defined 
+The good thing about SQL is its reliability while perforiming a transaction, 
+ACID: Atomicity, Consistency, Isoltion, durability
+
+Creating a MongoDB server:
+mongo atlas server lets us to create a free db on their cloud
+With a a free account we can create one, 
+After creating one, creat a user with read and write access
+allow access from anywhere, 
+Note down the password 
+
+Connecting to MongoDb:
+
+Mongoose is a popular object data modeling (ODM) library for MongoDB and Node.js. MongoDB is a NoSQL database that stores data in a flexible, JSON-like format, and Mongoose provides a straightforward, schema-based solution for modeling and interacting with this data.
+
+provide the connection string in 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/test');
+and we are ready to store our data in the DB.
+
+Object Data Modeling:
+Mongoose takes the data as it's represented in MongoDb and allows us to access it as objects in Javascripts
+
+Schemas determine the shape and structure of the documents inside that collection
+
+Model and schemas are objects and classes that mongoose provides for us to talk to collections of documents
+
+Model cretaed by us is something that generally captures the data our API is working with, We are using these model files here to act as the data access layer that controls 
+how data is read and updated while hiding the mongoose and MongoDb specific implementation details
+
+If we ever ddecided to switch databases, we could swap out the implementation of our model here to use a different data structure or database, Our controllers only workwith the function that we export from the models file, they don't care about how they are implemented. None of the code in our controllers or any of the code above data access layer will have to change because of how we set things up.
+
