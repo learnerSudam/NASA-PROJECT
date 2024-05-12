@@ -10,7 +10,7 @@ const path = require ('path');
 const fs = require('fs');
 
 
-const results = [];
+const planets = require('./planets.mongo');
 
 const habitabalPanets = [];
 
@@ -38,17 +38,19 @@ function loadPlanetsData(){
         comment: '#',
         columns: true
     }))
-    .on ('data', (data) =>{
+    .on ('data', async (data) =>{
         if(isHabitableplanet(data)){
-            habitabalPanets.push(data)
+            //ToDO: replace below create with upsert: insert + update
+       savePlanet(data);  
         }
     })
     .on('error', (err) =>{
         console.log(err);
         reject(err);
     })
-    .on('end', () =>{
-        console.log(`${habitabalPanets.length} Habitable plantes found`)
+    .on('end',async() =>{
+        const countPlanetsFound = (await getAllPlanets()).length
+        console.log(`${countPlanetsFound} Habitable plantes found`)
         //once we log the data the promise will resolve
         resolve();
     });
@@ -56,8 +58,24 @@ function loadPlanetsData(){
 
 }
 
-function getAllPlanets(){
-    return habitabalPanets;
+async function getAllPlanets(){
+    return await planets.find({}, {
+        '_id':0, '__v':0,
+    });
+}
+
+async function savePlanet(planet){
+    try{
+        await planets.updateOne({
+            keplerName: planet.kepler_name,
+        }, {
+            keplerName: planet.kepler_name,
+        },{
+            upsert: true,
+        });
+    } catch(err){
+        console.error(`Could not save planet ${err}`);
+    }
 }
 
 
