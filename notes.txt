@@ -307,3 +307,6 @@ how data is read and updated while hiding the mongoose and MongoDb specific impl
 
 If we ever ddecided to switch databases, we could swap out the implementation of our model here to use a different data structure or database, Our controllers only workwith the function that we export from the models file, they don't care about how they are implemented. None of the code in our controllers or any of the code above data access layer will have to change because of how we set things up.
 
+With mongoose we can define object models like launches and planets and the properties that they will contain. each property will be a separate column,
+
+When ever we are getting any request for read/write we can use mongoose function like find, findOne, findOneAndUpdate

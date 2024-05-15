@@ -26,9 +26,12 @@ async function httpAddNewLaunch(req, res){
             error: 'Invalid date !!'
         })
     }
-  
-    await scheduleNewLaunch(launch);
-   return res.status(201).json(launch);
+    try{
+      await scheduleNewLaunch(launch);
+      return res.status(201).json(launch);
+    } catch (error){
+      res.status(500).json({ error: error.message });
+    }
 
 }
 
