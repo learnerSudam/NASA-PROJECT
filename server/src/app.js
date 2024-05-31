@@ -3,8 +3,8 @@ const morgan = require('morgan');
 const express = require ('express');
 const cors = require('cors');
 
-const planetsRouter = require('./routes/planets/planets.router');
-const launchesRouter= require('./routes/launches/launches.router')
+const api = require('./routes/api')
+
 const app = express();
 
 //browser 
@@ -16,9 +16,7 @@ app.use(morgan('combined'));
 app.use(express.json());
 //
 app.use(express.static(path.join(__dirname,'..','public')));
-app.use('/launches',launchesRouter);
-app.use('/planets',planetsRouter);
-
+app.use('/v1',api);
 
 //whenever we make an request , express will look for the respective file
 //if it no match it will look inside the apis, so here be is managing the route

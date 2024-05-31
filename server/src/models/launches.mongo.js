@@ -29,7 +29,6 @@ name
     target: {
 
         type: String,
-        required: true,
     },
     customers: [String],
     upcoming: {

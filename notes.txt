@@ -118,7 +118,7 @@ const { get } = require('https')
 
 
 Why do we use modules:
-1.Reuse existing code (Module allows us  to package existing code into these reusable chunks.
+1.Reuse existing code Module allows us  to package existing code into these reusable chunks.
 2.Organize our code (Modules help us in organizing our code)
 3.Expose only what will be used: Modules expose only the functionality that will be used by other modules and hide details that only matter inside the modules
 
@@ -310,3 +310,17 @@ If we ever ddecided to switch databases, we could swap out the implementation of
 With mongoose we can define object models like launches and planets and the properties that they will contain. each property will be a separate column,
 
 When ever we are getting any request for read/write we can use mongoose function like find, findOne, findOneAndUpdate
+
+*Versioning*
+Grouping all our api routes under a version path, Versioning allows us to gradually move all our users who are using our API to a newer version
+
+Created one file in routes folder where all routs are added, And used that file in a middleware where a
+path was given to that route
+We have to update the api url where ever it was being called, In tests and in client
+
+The mapping of launch data into our launch object the the difficult one, By passing query in a post
+request can get our needed data from spaceX api. 
+Pagination is spliting the response from the server into different pages
+
+To reduce the the load on API which gets data from spaceX, We added a check if palnets from spaceX is
+already present in DB, the api call won't be made
