@@ -324,3 +324,16 @@ Pagination is spliting the response from the server into different pages
 
 To reduce the the load on API which gets data from spaceX, We added a check if palnets from spaceX is
 already present in DB, the api call won't be made
+
+CI / CD 
+
+CI: Continuous Integration, is a software development practice where developers frequently integrate their code changes into a shared repository. Each integration is
+ automatically verified by running tests and other quality checks, allowing teams to detect and address issues early in the development process.
+
+Continuous Delivery (CD) is a software development practice where code changes are automatically prepared for a release to production. It builds on the principles of 
+Continuous Integration (CI) by ensuring that code is not only integrated and tested frequently but also always in a deployable state. This approach allows teams to release 
+software more reliably and more frequently.
+
+Continuous Deployment: Goes a step further by automatically deploying every change that passes all tests and checks to production.
+
+Pipeline: It is the set of steps that needs to be complete as a part of our continious integration process
